@@ -6,7 +6,6 @@ import (
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/kataras/iris/v12"
 	log "github.com/sirupsen/logrus"
-	"os"
 )
 
 type (
@@ -62,13 +61,13 @@ func (s *Server) App() {
 
 // Serve application
 // compatible only with Handlebars
-func (s *Server) Serve() {
+func (s *Server) Serve(productionMode bool) {
 	var (
 		engine  = iris.Handlebars(s.PublicDir, s.Extension)
 		options iris.DirOptions
 		devMode = true
 	)
-	if os.Getenv("APP_ENV") == "production" {
+	if productionMode {
 		devMode = false
 		// to use Assets you need to compress template files using go-bindata
 		options = iris.DirOptions{

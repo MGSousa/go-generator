@@ -12,7 +12,7 @@ type (
 	// Developers get request information from the client's request by a Context.
 	Context = iris.Context
 
-	// An alias for iris.Map
-	// And Map is an alias of map[string]interface{}.
+	// Map An alias for iris.Map
+	// which internally is an alias of map[string]interface{}.
 	Map = iris.Map
 )
