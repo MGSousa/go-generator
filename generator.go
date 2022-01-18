@@ -32,7 +32,11 @@ type (
 		// auto-reload template files
 		Reload bool
 
+		// specify Testing mode
 		Testing bool
+
+		// specify Production mode
+		Production bool
 
 		// specify Server routes
 		Routes []Routes
@@ -50,10 +54,7 @@ func (s *Server) App() {
 	s.app = iris.New()
 
 	if s.Ws {
-		s.event, err = socketio.NewServer(nil)
-		if err != nil {
-			log.Fatal(err)
-		}
+		s.event = socketio.NewServer(nil)
 		s.rtHandle()
 		go s.event.Serve()
 	}
@@ -61,13 +62,13 @@ func (s *Server) App() {
 
 // Serve application
 // compatible only with Handlebars
-func (s *Server) Serve(productionMode bool) {
+func (s *Server) Serve() {
 	var (
 		engine  = iris.Handlebars(s.PublicDir, s.Extension)
 		options iris.DirOptions
 		devMode = true
 	)
-	if productionMode {
+	if s.Production {
 		devMode = false
 		// to use Assets you need to compress template files using go-bindata
 		options = iris.DirOptions{

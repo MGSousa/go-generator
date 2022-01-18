@@ -63,7 +63,7 @@ func TestServer_Serve(t *testing.T) {
 				Method: "GET",
 				Path:   "/api",
 			})
-			s.Serve(false)
+			s.Serve()
 
 			// test routes
 			app := httptest.New(t, s.app)
