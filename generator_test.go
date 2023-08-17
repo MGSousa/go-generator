@@ -14,7 +14,6 @@ func TestServer_Serve(t *testing.T) {
 		FsRoute   string
 		HttpPort  int
 		PublicDir string
-		Reload    bool
 		Routes    []Routes
 	}
 	tests := []struct {
@@ -28,7 +27,6 @@ func TestServer_Serve(t *testing.T) {
 				Extension: ".html",
 				FsRoute:   "/",
 				PublicDir: "./public",
-				Reload:    true,
 			},
 		},
 	}
@@ -41,7 +39,6 @@ func TestServer_Serve(t *testing.T) {
 				FsRoute:   tt.fields.FsRoute,
 				HttpPort:  tt.fields.HttpPort,
 				PublicDir: tt.fields.PublicDir,
-				Reload:    tt.fields.Reload,
 				Routes:    tt.fields.Routes,
 				Testing:   true,
 			}
@@ -70,6 +67,8 @@ func TestServer_Serve(t *testing.T) {
 			app.GET("/api").Expect().Status(200).
 				JSON().
 				Object().Keys().Contains("status", "content")
+
+			app.GET("/").Expect().Body().Contains("LoremIpsum")
 		})
 	}
 }

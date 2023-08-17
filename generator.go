@@ -3,6 +3,7 @@ package generator
 import (
 	"errors"
 	"fmt"
+
 	socketio "github.com/googollee/go-socket.io"
 	"github.com/kataras/iris/v12"
 	log "github.com/sirupsen/logrus"
@@ -28,9 +29,6 @@ type (
 
 		// specify templates directory ./public
 		PublicDir string
-
-		// auto-reload template files
-		Reload bool
 
 		// specify Testing mode
 		Testing bool
@@ -64,35 +62,42 @@ func (s *Server) App() {
 // compatible only with Handlebars
 func (s *Server) Serve() {
 	var (
-		engine  = iris.Handlebars(s.PublicDir, s.Extension)
 		options iris.DirOptions
+
+		fsDir interface{} = s.PublicDir
+
 		devMode = true
 	)
+
+	s.app.Logger().SetLevel("debug")
+	if s.FsRoute == "" {
+		s.FsRoute = "/"
+	}
+
 	if s.Production {
 		devMode = false
 		// to use Assets you need to compress template files using go-bindata
 		options = iris.DirOptions{
-			Asset:      s.Bindata.Asset,
-			AssetInfo:  s.Bindata.AssetInfo,
-			AssetNames: s.Bindata.AssetNames,
-			Gzip:       s.Bindata.Gzip,
+			Compress: s.Bindata.Gzip,
 		}
-		// embed assets
-		engine.Binary(s.Bindata.Asset, s.Bindata.AssetNames)
-	}
 
-	// Reload template files on changes
-	if s.Reload {
+		// embed assetFile contents to PublicDir
+		fsDir = iris.PrefixDir(s.PublicDir, s.Bindata.AssetFile())
+
+		// register the view engine to load the templates
+		// and create default handler for Assets
+		s.app.RegisterView(
+			iris.HTML(s.Bindata.AssetFile(), s.Extension).RootDir("public"))
+	} else {
+
+		engine := iris.HTML(s.PublicDir, s.Extension)
 		engine.Reload(devMode)
+
+		s.app.RegisterView(engine)
 	}
 
-	// register the view engine to load the templates
-	// and create default handler for Assets
-	s.app.RegisterView(engine)
-	if s.FsRoute == "" {
-		s.FsRoute = "/"
-	}
-	s.app.HandleDir(s.FsRoute, s.PublicDir, options)
+	// s.app.HandleDir(s.FsRoute, s.PublicDir, options)
+	s.app.HandleDir(s.FsRoute, fsDir, options)
 
 	// register multiple routes
 	for i := range s.Routes {
