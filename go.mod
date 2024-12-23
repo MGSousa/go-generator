@@ -7,7 +7,7 @@ toolchain go1.22.3
 require (
 	github.com/googollee/go-socket.io v1.6.1
 	github.com/kataras/iris/v12 v12.2.11
-	github.com/sirupsen/logrus v1.8.1
+	github.com/sirupsen/logrus v1.9.3
 )
 
 require (
