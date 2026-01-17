@@ -7,7 +7,7 @@ toolchain go1.24.1
 require (
 	github.com/googollee/go-socket.io v1.7.0
 	github.com/kataras/iris/v12 v12.2.11
-	github.com/sirupsen/logrus v1.9.3
+	github.com/sirupsen/logrus v1.9.4
 )
 
 require (
@@ -53,7 +53,7 @@ require (
 	github.com/sanity-io/litter v1.5.5 // indirect
 	github.com/schollz/closestmatch v2.1.0+incompatible // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
-	github.com/stretchr/testify v1.9.0 // indirect
+	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/tdewolff/minify/v2 v2.20.19 // indirect
 	github.com/tdewolff/parse/v2 v2.7.12 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
